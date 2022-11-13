@@ -1,29 +1,25 @@
-var apiKey ='e5ca99e27fde43e65424c7417c9bbfe2';
-var citiesList = [];
-var unit = "units=imperial";
-var dailyWeatherApiStarts =
-  "https://api.openweathermap.org/data/2.5/weather?q=";
-var forecastWeatherApiStarts =
-  "https://api.openweathermap.org/data/2.5/onecall?";
+var apiKey= "c4a23c57bf39555f8641c112ef2c2d92";
 
-var searchCity = $('#searchCityForm')
-var pastCities = $('#pastCities')
-
-  let getCityWeather = function(searchCityName){
-    var apiUrl= dailyWeatherApiStarts + searchCityName + '&' + apiKey + '&' + unit;
-
-    fetch(apiUrl).then(function(response){
-        if (response.ok) {
-            return response.json().then (function(response){
-                $('#cityName').html(response.name);    
-
-                var unixTime = response.dt;
-                var currentDate = moment.unix(unixTime).format("MM/DD/YY");
-                $('#currentdate').html(date);
-            })
-        }
-    }
-    )
-  }
-
-
+let weather = {
+      apiKey: "c4a23c57bf39555f8641c112ef2c2d92",
+      fetchWeather: function (city) {
+        fetch(
+          "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=metric&appid=" + this.apiKey 
+        )
+        .then((response) => response.json())
+        .then((data) => this.displayWeather(data));
+      },
+      displayWeather: function(data) {
+        const { name } = data;
+        const { icon, description } = data.weather[0];
+        const { temp, humidity } = data.main;
+        const { speed } = data.wind;
+        console.log(name, icon,description,temp,humidity,speed)
+        document.querySelector(".cityName").innerHTML = "Name of City: " + name;
+        document.querySelector(".weather-icon").src = "http://openweathermap.org/img/wn/"+ icon +"@2x.png";
+        document.querySelector(".tempToday").innerHTML =  + temp + "°C";
+        document.querySelector(".humidityToday").innerHTML = + humidity + "%";
+        document.querySelector(".windSpeedToday").innerHTML = + speed + "km/h";
+      } 
+    
+    };
