@@ -23,8 +23,17 @@ let weather = {
         document.querySelector("#tempToday").innerHTML =  + temp + "°F";
         document.querySelector("#humidityToday").innerHTML = + humidity + "%";
         document.querySelector("#windSpeedToday").innerHTML = + speed + "km/h";
-      } 
-    
+      }, 
+    search: function () {
+        this.fetchWeather(document.querySelector(".searchBar").value);
+      },
     };
+
+    document.querySelector(".btn").addEventListener("click", function () {
+        event.preventDefault();
+        weather.search();
+      });
+      
+     
 
   
