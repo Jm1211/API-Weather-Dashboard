@@ -1,10 +1,13 @@
 var apiKey= "c4a23c57bf39555f8641c112ef2c2d92";
 
+var currentDate = moment().format("MM/DD/YYYY");
+$("#currentdate").text(currentDate);
+
 let weather = {
       apiKey: "c4a23c57bf39555f8641c112ef2c2d92",
       fetchWeather: function (city) {
         fetch(
-          "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=metric&appid=" + this.apiKey 
+          "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=imperial&appid=" + this.apiKey 
         )
         .then((response) => response.json())
         .then((data) => this.displayWeather(data));
@@ -15,11 +18,13 @@ let weather = {
         const { temp, humidity } = data.main;
         const { speed } = data.wind;
         console.log(name, icon,description,temp,humidity,speed)
-        document.querySelector(".cityName").innerHTML = "Name of City: " + name;
-        document.querySelector(".weather-icon").src = "http://openweathermap.org/img/wn/"+ icon +"@2x.png";
-        document.querySelector(".tempToday").innerHTML =  + temp + "°C";
-        document.querySelector(".humidityToday").innerHTML = + humidity + "%";
-        document.querySelector(".windSpeedToday").innerHTML = + speed + "km/h";
+        document.querySelector("#cityName").innerHTML = name;
+        document.querySelector("#weatherIcon").src = "http://openweathermap.org/img/wn/"+ icon +"@2x.png";
+        document.querySelector("#tempToday").innerHTML =  + temp + "°F";
+        document.querySelector("#humidityToday").innerHTML = + humidity + "%";
+        document.querySelector("#windSpeedToday").innerHTML = + speed + "km/h";
       } 
     
     };
+
+  
