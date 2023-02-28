@@ -33,7 +33,7 @@ function displayWeather(event) {
 
 // function to display current weather
 function currentWeather(city) {
-  const queryURL =
+  let queryURL =
     "https://api.openweathermap.org/data/2.5/weather?q=" +
     city +
     "&APPID=" +
@@ -43,22 +43,22 @@ function currentWeather(city) {
     method: "GET",
   }).then(function (response) {
   
-    const weathericon = response.weather[0].icon;
-    const iconurl =
+    let weathericon = response.weather[0].icon;
+    let iconurl =
       "https://openweathermap.org/img/wn/" + weathericon + "@2x.png";
 
-    const date = new Date(response.dt * 1000).toLocaleDateString();
+    let date = new Date(response.dt * 1000).toLocaleDateString();
     $(currentCity).html(
       response.name + "(" + date + ")" + "<img src=" + iconurl + ">"
     );
 
     
-    const tempF = (response.main.temp - 273.15) * 1.8 + 32;
+    let tempF = (response.main.temp - 273.15) * 1.8 + 32;
     $(currentTemperature).html(tempF.toFixed(2) + "&#8457");
     $(currentHumidity).html(response.main.humidity + "%");
 
-    const ws = response.wind.speed;
-    const windsmph = (ws * 2.237).toFixed(1);
+    let ws = response.wind.speed;
+    let windsmph = (ws * 2.237).toFixed(1);
     $(currentWSpeed).html(windsmph + "MPH");
     UVIndex(response.coord.lon, response.coord.lat);
     forecast(response.id);
@@ -81,7 +81,7 @@ function currentWeather(city) {
   });
 }
 function UVIndex(ln, lt) {
-  const uvqURL =
+  let uvqURL =
     "https://api.openweathermap.org/data/2.5/uvi?appid=" +
     apiKey +
     "&lat=" +
@@ -99,7 +99,7 @@ function UVIndex(ln, lt) {
 // displaying 5 day forecast
 function forecast(cityid) {
   
-  const forecastURL =
+  let forecastURL =
     "https://api.openweathermap.org/data/2.5/forecast?id=" +
     cityid +
     "&appid=" +
@@ -117,14 +117,44 @@ function forecast(cityid) {
       const tempK = response.list[(i + 1) * 8 - 1].main.temp;
       const tempF = ((tempK - 273.5) * 1.8 + 32).toFixed(2);
       const humidity = response.list[(i + 1) * 8 - 1].main.humidity;
+      const ws = response.list[(i + 1) * 8 - 1].wind.speed;
+      const windsmph = (ws * 2.237).toFixed(1);
 
       $("#Date" + i).html(date);
       $("#weatherIcon" + i).html("<img src=" + iconurl + ">");
       $("#tempDay" + i).html(tempF + "&#8457");
       $("#humidityDay" + i).html(humidity + "%");
-      $("")
+      $("#windDay" + i).html(windsmph + "MPH");
     }
   });
+}
+
+function addToList(c) {
+  let listEl = $("<li>" + c.toUpperCase() + "</li>");
+  $(listEl).attr("class", "list-group-item");
+  $(listEl).attr("data-value", c.toUpperCase());
+  $(".list-group").append(listEl);
+}
+
+function invokePastSearch(event) {
+  let liEl = event.target;
+  if (event.target.matches("li")) {
+    city = liEl.textContent.trim();
+    currentWeather(city);
+  }
+}
+
+function loadlastCity() {
+  $("ul").empty();
+  let sCity = JSON.parse(localStorage.getItem("cityname"));
+  if (sCity !== null) {
+    sCity = JSON.parse(localStorage.getItem("cityname"));
+    for (i = 0; i < sCity.length; i++) {
+      addToList(sCity[i]);
+    }
+    city = sCity[i - 1];
+    currentWeather(city);
+  }
 }
 
 
